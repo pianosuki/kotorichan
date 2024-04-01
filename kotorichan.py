@@ -141,12 +141,11 @@ class BiBiuffer:
                 data_array[i:i + 4] = data_segment.to_bytes(4, byteorder="little")
                 i += 4
             else:
-                remaining_bytes = len(data_array) - i
                 magic_mod = magic >> (8 * (i % 4)) & 0xFF
-                data_segment = int.from_bytes(data_array[i:], byteorder="little")
-                data_segment ^= magic_mod
-                data_array[i:] = data_segment.to_bytes(remaining_bytes, byteorder="little")
-                i += remaining_bytes
+                single_byte = data_array[i]
+                single_byte ^= magic_mod
+                data_array[i] = single_byte
+                i += 1
         self.data = bytes(data_array)
 
 
